@@ -26,6 +26,7 @@
 		8BE6532725CD8538005A5DA9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BE6532525CD8538005A5DA9 /* Main.storyboard */; };
 		8BE6532925CD8539005A5DA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BE6532825CD8539005A5DA9 /* Assets.xcassets */; };
 		8BE6532C25CD8539005A5DA9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BE6532A25CD8539005A5DA9 /* LaunchScreen.storyboard */; };
+		8BF5A4B025CFE9CE004C02D4 /* RepeatingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF5A4AF25CFE9CE004C02D4 /* RepeatingTimer.swift */; };
 		B0166A95370CB38176901903 /* Pods_Pizza_Factory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED0C3A67C4A42A1F4E99052 /* Pods_Pizza_Factory.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +53,7 @@
 		8BE6532825CD8539005A5DA9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8BE6532B25CD8539005A5DA9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8BE6532D25CD8539005A5DA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8BF5A4AF25CFE9CE004C02D4 /* RepeatingTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingTimer.swift; sourceTree = "<group>"; };
 		CED0C3A67C4A42A1F4E99052 /* Pods_Pizza_Factory.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pizza_Factory.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA2D67651DCA11BBF357EC00 /* Pods-Pizza-Factory.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pizza-Factory.debug.xcconfig"; path = "Target Support Files/Pods-Pizza-Factory/Pods-Pizza-Factory.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -132,8 +134,9 @@
 		8BE6531E25CD8538005A5DA9 /* Pizza-Factory */ = {
 			isa = PBXGroup;
 			children = (
-				8B9158C725CEA11000C25747 /* Extension */,
 				8B081B1925CD92EA00EEE46A /* Components */,
+				8B9158C725CEA11000C25747 /* Extension */,
+				8BF5A4B225CFF17C004C02D4 /* Libraries */,
 				8B6C4C2825CE69EF00682579 /* Model */,
 				8BE6533425CD856C005A5DA9 /* Pages */,
 				8BE6533525CD8587005A5DA9 /* Resources */,
@@ -160,6 +163,14 @@
 				8BE6532825CD8539005A5DA9 /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		8BF5A4B225CFF17C004C02D4 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				8BF5A4AF25CFE9CE004C02D4 /* RepeatingTimer.swift */,
+			);
+			path = Libraries;
 			sourceTree = "<group>";
 		};
 		9157CF6250515B9339687476 /* Frameworks */ = {
@@ -290,6 +301,7 @@
 				8BE6532025CD8538005A5DA9 /* AppDelegate.swift in Sources */,
 				8B6C4C2F25CE6B0E00682579 /* PizzaModel.swift in Sources */,
 				8B6C4C2A25CE6A0500682579 /* ChefModel.swift in Sources */,
+				8BF5A4B025CFE9CE004C02D4 /* RepeatingTimer.swift in Sources */,
 				8B7412CE25CEF1B200577F58 /* ChefViewModel.swift in Sources */,
 				8B6C4C2325CE680500682579 /* ChefView.swift in Sources */,
 				8BE6532225CD8538005A5DA9 /* SceneDelegate.swift in Sources */,

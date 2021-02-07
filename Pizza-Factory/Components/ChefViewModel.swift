@@ -8,5 +8,6 @@
 import RxSwift
 
 class ChefViewModel {
-    let psSwitchStartChangeValue = PublishSubject<Bool>()
+    let psSwitchFactory = PublishSubject<Bool>()
+    let psAddedPizza = PublishSubject<Int>()
 }

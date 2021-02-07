@@ -23,11 +23,13 @@ class ChefView: UIView {
     @IBOutlet weak var lblChefName: UILabel!
     @IBOutlet weak var lblRemaining: UILabel!
     @IBOutlet weak var lblSpeed: UILabel!
-    
     // Pizza
     @IBOutlet weak var svPizza: UIScrollView!
     @IBOutlet weak var skvPizza: UIStackView!
-     
+    
+//    let t = DispatchSource.makeTimerSource()
+    var t: RepeatingTimer?
+    
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         self.initUI()
@@ -60,9 +62,9 @@ class ChefView: UIView {
     // MARK: - Core
     private func initUI() {
         self.imgvChef.setImageColor(color: self.mChef.colorChef)
-        self.lblChefName.text = String(format: "Pizza Chef %i", self.mChef.iChefId)
-        self.lblRemaining.text = String(format: "Remaining: %i", self.mChef.iRemainPizza)
-        self.lblSpeed.text = String(format: "Speed: %i s/pizza", self.mChef.iSpeed)
+        self.lblChefName.text = "Pizza Chef \(self.mChef.iChefId)"
+        self.updateRemaining()
+        self.lblSpeed.text = "Speed: \(self.mChef.tiSpeed) s/pizza"
         
         self.vChef.setBorder(color: .black, width: 1.0)
         self.vChefInformation.setBorder(color: .black, width: 1.0)
@@ -74,16 +76,62 @@ class ChefView: UIView {
         
     }
     
+    func updateRemaining() {
+        self.lblRemaining.text = "Remaining: \(self.mChef.getPizzaRemain())"
+    }
+    
     func addPizza(_ mPizza: PizzaModel) {
+        self.mChef.addNewPizza(mPizza)
+        self.updateRemaining()
+    }
+    
+    func makeNewPizza() {
+        let newPizza = self.mChef.arrPizza.removeFirst()
+        self.mChef.arrPizzaMade.append(newPizza)
+        self.makePizza(newPizza)
+    }
+    
+    func makePizza(_ mPizza: PizzaModel) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
+            guard let self = self else { return }
+            let vPizza = PizzaView()
+            self.skvPizza.addArrangedSubview(vPizza)
+            vPizza.updateUI(mPizza, chef: self.mChef)
+        }
+    }
+    
+    // Turn on / off factory of each chef
+    func switchFactory(isOn bOn: Bool) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
+            guard let self = self else { return }
+            self.switchStart.isOn = bOn
+            self.vm.psSwitchFactory.onNext((bOn))
+        }
+        if bOn {
+            self.t = RepeatingTimer(timeInterval: self.mChef.tiSpeed)
+            
+            t?.eventHandler = {
+                if self.mChef.arrPizza.count > 0 {
+                    self.makeNewPizza()
+                }
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
+                    guard let self = self else { return }
+                    self.updateRemaining()
+                }
+            }
+            t?.resume()
+        } else {
+            t?.suspend()
+        }
         
     }
     
     // MARK: - Action
     @IBAction func switchStartChangeValue(_ sender: UISwitch) {
+        // Toggle
         self.mChef.bStart = sender.isOn
-        self.vm.psSwitchStartChangeValue.onNext((sender.isOn))
+        self.switchFactory(isOn: sender.isOn)
     }
-    
     
     /*
     // Only override draw() if you perform custom drawing.

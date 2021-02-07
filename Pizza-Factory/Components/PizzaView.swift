@@ -11,6 +11,8 @@ class PizzaView: UIView {
 
     var mPizza: PizzaModel?
     
+    @IBOutlet var vRoot: UIView!
+    
     // Pizza
     @IBOutlet weak var vPizzaContainer: UIView!
     @IBOutlet weak var lblPizzaName: UILabel!
@@ -37,6 +39,30 @@ class PizzaView: UIView {
         self.initUI()
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.initNib()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.initNib()
+    }
+
+    private func initNib() {
+        self.backgroundColor = .clear
+        Bundle(for: PizzaView.self).loadNibNamed("PizzaView", owner: self, options: nil)
+        self.addSubview(self.vRoot)
+        self.vRoot.frame = bounds
+        self.vRoot.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        
+        self.initUI()
+    }
+    
+    deinit {
+        
+    }
+    
     var bEditExtended = false
     
     // MARK: - Core
@@ -47,13 +73,16 @@ class PizzaView: UIView {
         
         // Edit
         self.extendEdit(false)
+        // Size
     }
     
     // MARK: - Update UI
-    func updateUI(_ mPizza: PizzaModel) {
+    func updateUI(_ mPizza: PizzaModel, chef mChef: ChefModel) {
         self.mPizza = mPizza
-        self.lblPizzaName.text =
-            String(format: "Pizza_%4i", mPizza.iPizzaId)
+        self.mPizza?.mChef = mChef
+        self.vPizzaContainer.backgroundColor = mPizza.mChef?.colorChef.withAlphaComponent(0.3)
+        self.lblPizzaName.text = String(format: "Pizza_%04i", mPizza.iPizzaId)
+        self.lblPizzaName.textColor = mPizza.mChef?.colorChef
     }
     
     func extendEdit(_ bExtend: Bool) {
@@ -66,6 +95,8 @@ class PizzaView: UIView {
     @IBAction func btnEditClickEvent(_ sender: Any) {
         self.extendEdit(!self.bEditExtended)
     }
+    
+    
     
     
     /*

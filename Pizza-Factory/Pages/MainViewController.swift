@@ -36,12 +36,9 @@ class MainViewController: UIViewController {
     @IBOutlet weak var switchAll: UISwitch!
     
     var arrPizza = [PizzaModel]()
+    var arrPizzaNotAssign = [PizzaModel]()
     var arrChefView = [ChefView]()
-    let chefQueue = DispatchQueue(label: "ChefQueue",
-                                    qos: .userInitiated,
-                                    attributes: .concurrent,
-                                    autoreleaseFrequency: .workItem,
-                                    target: nil)
+//    let cqChef: DispatchQueue = DispatchQueue(label: "ChefCorrentQueue", qos: .userInitiated, attributes: .concurrent)
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -69,8 +66,14 @@ class MainViewController: UIViewController {
             self.skvChef.addArrangedSubview(vChef)
             self.arrChefView.append(vChef)
             
-            vChef.vm.psSwitchStartChangeValue.subscribe(onNext: { [weak self] b in
-                
+            vChef.vm.psSwitchFactory.subscribe(onNext: { [weak self] bSwitch in
+                guard let self = self else { return }
+                if bSwitch {
+                    self.switchAll.isOn = true
+//                    self.cqChef.async {
+//                        vChef.switchFactory(isOn: bSwitch)
+//                    }
+                }
             }).disposed(by: self.disposeBag)
         }
         
@@ -86,10 +89,10 @@ class MainViewController: UIViewController {
         self.changeAllSwitch(false)
         
         // Default pizza
-        for i in 0...999 {
-            self.arrPizza.append(PizzaModel(id: i))
+        for i in 0...9 {
+            self.arrPizzaNotAssign.append(PizzaModel(id: i))
         }
-        self.updateSummary()
+        self.assignPizza()
     }
     
     // MARK: - Update UI
@@ -98,31 +101,51 @@ class MainViewController: UIViewController {
         
         for (index, v) in self.arrChefView.enumerated() {
             switch index {
-            case 0: self.lblSummaryChef0.text = "Pizza Chef 0: \(v.mChef.iRemainPizza)"
-            case 1: self.lblSummaryChef1.text = "Pizza Chef 1: \(v.mChef.iRemainPizza)"
-            case 2: self.lblSummaryChef2.text = "Pizza Chef 2: \(v.mChef.iRemainPizza)"
-            case 3: self.lblSummaryChef3.text = "Pizza Chef 3: \(v.mChef.iRemainPizza)"
-            case 4: self.lblSummaryChef4.text = "Pizza Chef 4: \(v.mChef.iRemainPizza)"
-            case 5: self.lblSummaryChef5.text = "Pizza Chef 5: \(v.mChef.iRemainPizza)"
-            case 6: self.lblSummaryChef6.text = "Pizza Chef 6: \(v.mChef.iRemainPizza)"
+            case 0: self.lblSummaryChef0.text = "Pizza Chef 0: \(v.mChef.arrPizza.count)"
+            case 1: self.lblSummaryChef1.text = "Pizza Chef 1: \(v.mChef.arrPizza.count)"
+            case 2: self.lblSummaryChef2.text = "Pizza Chef 2: \(v.mChef.arrPizza.count)"
+            case 3: self.lblSummaryChef3.text = "Pizza Chef 3: \(v.mChef.arrPizza.count)"
+            case 4: self.lblSummaryChef4.text = "Pizza Chef 4: \(v.mChef.arrPizza.count)"
+            case 5: self.lblSummaryChef5.text = "Pizza Chef 5: \(v.mChef.arrPizza.count)"
+            case 6: self.lblSummaryChef6.text = "Pizza Chef 6: \(v.mChef.arrPizza.count)"
             default: break
             }
         }
     }
     
+    // MARK: - Assign
+    func assignPizza() {
+        for (index, mPizza) in self.arrPizzaNotAssign.enumerated() {
+            mPizza.mChef = self.arrChefView[(index % 7)].mChef
+            self.arrChefView[(index % 7)].addPizza(mPizza)
+            self.arrPizza.append(self.arrPizzaNotAssign.removeFirst())
+        }
+        self.updateSummary()
+    }
+    
     // MARK: - Action
     @IBAction func btnAdd10PizzaClickEvent(_ sender: Any) {
         let iTotal = self.arrPizza.count
-        for i in 1...10 {
-            self.arrPizza.append(PizzaModel(id: (iTotal + i)))
+        for (index, i) in (0...9).enumerated() {
+            let mPizza = PizzaModel(id: (iTotal + i))
+            self.arrPizzaNotAssign.append(mPizza)
+            self.arrChefView[(index % 7)].addPizza(mPizza)
+            self.arrPizza.append(self.arrPizzaNotAssign.removeFirst())
         }
         self.updateSummary()
     }
     
     @IBAction func btnAdd100PizzaClickEvent(_ sender: Any) {
         let iTotal = self.arrPizza.count
-        for i in 1...100 {
-            self.arrPizza.append(PizzaModel(id: (iTotal + i)))
+        for (index, i) in (0...99).enumerated() {
+            let mPizza = PizzaModel(id: (iTotal + i))
+            self.arrPizzaNotAssign.append(mPizza)
+            
+            
+            let mAssignedPizza = self.arrPizzaNotAssign.removeFirst()
+            self.arrChefView[(index % 7)].addPizza(mAssignedPizza)
+            self.arrPizza.append(mAssignedPizza)
+            
         }
         self.updateSummary()
     }
@@ -133,12 +156,8 @@ class MainViewController: UIViewController {
     
     func changeAllSwitch(_ bAll: Bool) {
         self.arrChefView.forEach {
-            $0.switchStart.isOn = bAll
+            $0.switchFactory(isOn: bAll)
         }
-    }
-    
-    func createPizza(view vPizza: PizzaView) {
-        
     }
 }
 

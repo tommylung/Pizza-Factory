@@ -17,6 +17,7 @@ enum PizzaTopping {
 
 class PizzaModel: NSObject {
     var iPizzaId: Int = 0
+    var mChef: ChefModel?
     var pizzaSize: PizzaSize = .small
     var pizzaTopping = [PizzaTopping]()
     
