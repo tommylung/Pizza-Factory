@@ -74,6 +74,11 @@ class PizzaView: UIView {
         // Edit
         self.extendEdit(false)
         // Size
+        self.btnSizeSmall.setBorder(color: .blue)
+        self.btnSizeMedium.setBorder(color: .blue)
+        self.btnSizeLarge.setBorder(color: .blue)
+        // Topping
+        
     }
     
     // MARK: - Update UI
@@ -91,11 +96,29 @@ class PizzaView: UIView {
         self.vTopping.isHidden = !bExtend
     }
     
+    func madePizza() {
+        self.btnEdit.isHidden = true
+        self.extendEdit(false)
+    }
+    
     // MARK: - Action
     @IBAction func btnEditClickEvent(_ sender: Any) {
         self.extendEdit(!self.bEditExtended)
     }
-    
+    // Size
+    @IBAction func btnSizeSmallClickEvent(_ sender: Any) {
+        self.mPizza?.pizzaSize = .small
+    }
+    @IBAction func btnSizeMediumClickEvent(_ sender: Any) {
+        self.mPizza?.pizzaSize = .medium
+    }
+    @IBAction func btnSizeLargeClickEvent(_ sender: Any) {
+        self.mPizza?.pizzaSize = .large
+    }
+    // Topping
+    @IBAction func btnToppingRoastClickEvent(_ sender: Any) {
+        
+    }
     
     
     

@@ -92,14 +92,23 @@
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yjs-qP-hZK">
                                             <rect key="frame" x="0.0" y="0.0" width="131.5" height="40"/>
                                             <state key="normal" title="S"/>
+                                            <connections>
+                                                <action selector="btnSizeSmallClickEvent:" destination="-1" eventType="touchUpInside" id="tKq-yZ-WIl"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SZt-UD-Uld">
                                             <rect key="frame" x="131.5" y="0.0" width="131" height="40"/>
                                             <state key="normal" title="M"/>
+                                            <connections>
+                                                <action selector="btnSizeMediumClickEvent:" destination="-1" eventType="touchUpInside" id="Oou-Bz-OHu"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gyl-b1-yt5">
                                             <rect key="frame" x="262.5" y="0.0" width="131.5" height="40"/>
                                             <state key="normal" title="L"/>
+                                            <connections>
+                                                <action selector="btnSizeLargeClickEvent:" destination="-1" eventType="touchUpInside" id="SLR-g4-bRh"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                 </stackView>
@@ -131,15 +140,18 @@
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IWf-6c-Wdx">
                                                     <rect key="frame" x="0.0" y="0.0" width="131.5" height="30"/>
-                                                    <state key="normal" title="Button"/>
+                                                    <state key="normal" title="Roast Beef"/>
+                                                    <connections>
+                                                        <action selector="btnToppingRoastClickEvent:" destination="-1" eventType="touchUpInside" id="sFy-SX-Jgu"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o0g-5T-hMj">
                                                     <rect key="frame" x="131.5" y="0.0" width="131" height="30"/>
-                                                    <state key="normal" title="Button"/>
+                                                    <state key="normal" title="Bell Pappers"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qD8-U8-X3n">
                                                     <rect key="frame" x="262.5" y="0.0" width="131.5" height="30"/>
-                                                    <state key="normal" title="Button"/>
+                                                    <state key="normal" title="Mushrooms"/>
                                                 </button>
                                             </subviews>
                                         </stackView>

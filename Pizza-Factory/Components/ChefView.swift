@@ -27,8 +27,8 @@ class ChefView: UIView {
     @IBOutlet weak var svPizza: UIScrollView!
     @IBOutlet weak var skvPizza: UIStackView!
     
-//    let t = DispatchSource.makeTimerSource()
     var t: RepeatingTimer?
+    var arrPizzaView = [PizzaView]()
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
@@ -83,20 +83,31 @@ class ChefView: UIView {
     func addPizza(_ mPizza: PizzaModel) {
         self.mChef.addNewPizza(mPizza)
         self.updateRemaining()
+        
+        let vPizza = PizzaView()
+        self.skvPizza.addArrangedSubview(vPizza)
+        self.arrPizzaView.append(vPizza)
+        vPizza.updateUI(mPizza, chef: self.mChef)
     }
     
     func makeNewPizza() {
-        let newPizza = self.mChef.arrPizza.removeFirst()
-        self.mChef.arrPizzaMade.append(newPizza)
-        self.makePizza(newPizza)
-    }
-    
-    func makePizza(_ mPizza: PizzaModel) {
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
-            guard let self = self else { return }
-            let vPizza = PizzaView()
-            self.skvPizza.addArrangedSubview(vPizza)
-            vPizza.updateUI(mPizza, chef: self.mChef)
+        if self.mChef.arrPizza.count > 0 {
+            let newPizza = self.mChef.arrPizza.removeFirst()
+            newPizza.status = true
+            self.mChef.arrPizzaMade.append(newPizza)
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
+                guard let self = self else { return }
+                self.arrPizzaView[self.mChef.arrPizzaMade.count - 1].madePizza()
+            }
+            
+            self.vm.psMadeNewPizza.onNext(())
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
+                guard let self = self else { return }
+                self.switchStart.setOn(false, animated: true)
+            }
+            self.t?.suspend()
         }
     }
     
@@ -104,16 +115,15 @@ class ChefView: UIView {
     func switchFactory(isOn bOn: Bool) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
             guard let self = self else { return }
-            self.switchStart.isOn = bOn
+            self.switchStart.setOn(bOn, animated: true)
             self.vm.psSwitchFactory.onNext((bOn))
         }
         if bOn {
             self.t = RepeatingTimer(timeInterval: self.mChef.tiSpeed)
             
             t?.eventHandler = {
-                if self.mChef.arrPizza.count > 0 {
-                    self.makeNewPizza()
-                }
+                self.makeNewPizza()
+                
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
                     guard let self = self else { return }
                     self.updateRemaining()
@@ -131,6 +141,10 @@ class ChefView: UIView {
         // Toggle
         self.mChef.bStart = sender.isOn
         self.switchFactory(isOn: sender.isOn)
+        
+        if self.mChef.arrPizza.count == 0 {
+            self.switchStart.setOn(false, animated: true)
+        }
     }
     
     /*

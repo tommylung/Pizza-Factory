@@ -38,7 +38,6 @@ class MainViewController: UIViewController {
     var arrPizza = [PizzaModel]()
     var arrPizzaNotAssign = [PizzaModel]()
     var arrChefView = [ChefView]()
-//    let cqChef: DispatchQueue = DispatchQueue(label: "ChefCorrentQueue", qos: .userInitiated, attributes: .concurrent)
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -66,13 +65,15 @@ class MainViewController: UIViewController {
             self.skvChef.addArrangedSubview(vChef)
             self.arrChefView.append(vChef)
             
+            vChef.vm.psMadeNewPizza.subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.updateSummary()
+            }).disposed(by: self.disposeBag)
+            
             vChef.vm.psSwitchFactory.subscribe(onNext: { [weak self] bSwitch in
                 guard let self = self else { return }
                 if bSwitch {
-                    self.switchAll.isOn = true
-//                    self.cqChef.async {
-//                        vChef.switchFactory(isOn: bSwitch)
-//                    }
+                    self.switchAll.setOn(true, animated: true)
                 }
             }).disposed(by: self.disposeBag)
         }
@@ -97,18 +98,22 @@ class MainViewController: UIViewController {
     
     // MARK: - Update UI
     func updateSummary() {
-        self.lblSummaryTitle.text = "Bindo Pizza Factory Summary (Total: \(arrPizza.count))"
-        
-        for (index, v) in self.arrChefView.enumerated() {
-            switch index {
-            case 0: self.lblSummaryChef0.text = "Pizza Chef 0: \(v.mChef.arrPizza.count)"
-            case 1: self.lblSummaryChef1.text = "Pizza Chef 1: \(v.mChef.arrPizza.count)"
-            case 2: self.lblSummaryChef2.text = "Pizza Chef 2: \(v.mChef.arrPizza.count)"
-            case 3: self.lblSummaryChef3.text = "Pizza Chef 3: \(v.mChef.arrPizza.count)"
-            case 4: self.lblSummaryChef4.text = "Pizza Chef 4: \(v.mChef.arrPizza.count)"
-            case 5: self.lblSummaryChef5.text = "Pizza Chef 5: \(v.mChef.arrPizza.count)"
-            case 6: self.lblSummaryChef6.text = "Pizza Chef 6: \(v.mChef.arrPizza.count)"
-            default: break
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) { [weak self] in
+            guard let self = self else { return }
+            
+            self.lblSummaryTitle.text = "Bindo Pizza Factory Summary (Total: \(self.arrPizza.count))"
+            
+            for (index, v) in self.arrChefView.enumerated() {
+                switch index {
+                case 0: self.lblSummaryChef0.text = "Pizza Chef 0: \(v.mChef.getPizzaRemain())"
+                case 1: self.lblSummaryChef1.text = "Pizza Chef 1: \(v.mChef.getPizzaRemain())"
+                case 2: self.lblSummaryChef2.text = "Pizza Chef 2: \(v.mChef.getPizzaRemain())"
+                case 3: self.lblSummaryChef3.text = "Pizza Chef 3: \(v.mChef.getPizzaRemain())"
+                case 4: self.lblSummaryChef4.text = "Pizza Chef 4: \(v.mChef.getPizzaRemain())"
+                case 5: self.lblSummaryChef5.text = "Pizza Chef 5: \(v.mChef.getPizzaRemain())"
+                case 6: self.lblSummaryChef6.text = "Pizza Chef 6: \(v.mChef.getPizzaRemain())"
+                default: break
+                }
             }
         }
     }
